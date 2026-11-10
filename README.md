@@ -13,6 +13,7 @@ Crie QR Codes dinâmicos para plaquinhas (avaliação Google, WhatsApp, Instagra
 
 - Criar placa (gera QR em segundos) e baixar **PNG** / **SVG** para a gráfica
 - **Trocar destino** a qualquer momento
+- **Plaquinha de Wi-Fi dinâmica**: o QR abre uma página pública com SSID, senha (revelar/copiar) e passo a passo; troque rede/senha no painel e a placa impressa continua valendo
 - **Ativar / desativar** (o QR para de abrir quando desativado)
 - **Travar** placa contra edições acidentais (edição e exclusão bloqueadas)
 - **Arquivar** placas que saíram de circulação

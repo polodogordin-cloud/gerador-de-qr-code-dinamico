@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { isAuthenticated } from "@/lib/session";
 import { normalizeDestination } from "@/lib/slug";
+import { validateWifiInput } from "@/lib/wifi";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -11,9 +12,12 @@ type PatchBody = {
   ativo?: unknown;
   arquivada?: unknown;
   travada?: unknown;
+  wifi_ssid?: unknown;
+  wifi_senha?: unknown;
+  wifi_seguranca?: unknown;
 };
 
-/** Atualiza uma plaquinha (destino, nome, ativo, arquivada, travada). */
+/** Atualiza uma plaquinha (link, Wi-Fi, nome, ativo, arquivada, travada). */
 export async function PATCH(request: Request, { params }: Params) {
   if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
@@ -51,13 +55,39 @@ export async function PATCH(request: Request, { params }: Params) {
   const wantsNome = body.nome !== undefined;
   const wantsDestino = body.destino !== undefined;
   const wantsArquivada = body.arquivada !== undefined;
+  const wantsWifi =
+    body.wifi_ssid !== undefined ||
+    body.wifi_senha !== undefined ||
+    body.wifi_seguranca !== undefined;
 
-  // Placa travada bloqueia edições de nome/destino/arquivamento.
+  if (wantsDestino && wantsWifi) {
+    return NextResponse.json(
+      { error: "Envie destino OU dados de Wi-Fi — nunca os dois na mesma alteração." },
+      { status: 422 }
+    );
+  }
+
+  // Placa travada bloqueia edições de conteúdo (nome/destino/Wi-Fi/arquivamento).
   // O interruptor de atividade (ativo) continua liberado como “botão de emergência”.
-  if (current.travada && (wantsNome || wantsDestino || wantsArquivada)) {
+  if (current.travada && (wantsNome || wantsDestino || wantsArquivada || wantsWifi)) {
     return NextResponse.json(
       { error: "Esta plaquinha está travada. Destrave antes de editar." },
       { status: 409 }
+    );
+  }
+
+  const currentTipo = current.tipo === "wifi" ? "wifi" : "link";
+
+  if (wantsDestino && currentTipo === "wifi") {
+    return NextResponse.json(
+      { error: "Esta plaquinha é de Wi-Fi. Edite os dados da rede em vez do destino." },
+      { status: 422 }
+    );
+  }
+  if (wantsWifi && currentTipo !== "wifi") {
+    return NextResponse.json(
+      { error: "Esta plaquinha é de link. Use o campo destino." },
+      { status: 422 }
     );
   }
 
@@ -78,6 +108,21 @@ export async function PATCH(request: Request, { params }: Params) {
       );
     }
     update.destino = destino;
+  }
+
+  if (wantsWifi) {
+    const wifi = validateWifiInput({
+      ssid: body.wifi_ssid !== undefined ? body.wifi_ssid : current.wifi_ssid,
+      senha: body.wifi_senha !== undefined ? body.wifi_senha : current.wifi_senha,
+      seguranca:
+        body.wifi_seguranca !== undefined ? body.wifi_seguranca : current.wifi_seguranca ?? "WPA",
+    });
+    if (!wifi.ok) {
+      return NextResponse.json({ error: wifi.error }, { status: 422 });
+    }
+    update.wifi_ssid = wifi.ssid;
+    update.wifi_senha = wifi.senha;
+    update.wifi_seguranca = wifi.seguranca;
   }
 
   if (body.ativo !== undefined) {

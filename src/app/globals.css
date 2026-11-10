@@ -733,3 +733,311 @@ button { font-family: var(--font); }
   .print-area .print-name { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: #111; }
   .print-area .print-url { font-size: 12px; color: #555; font-family: ui-monospace, monospace; }
 }
+
+/* ============ Wi-Fi: seletor de tipo no formulário ============ */
+
+.seg {
+  display: flex;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 5px;
+}
+.seg button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-2);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+.seg button:hover { color: var(--accent-strong); }
+.seg button.active {
+  background: var(--surface);
+  color: var(--accent-strong);
+  box-shadow: var(--shadow-sm), 0 0 0 1px var(--border-strong);
+}
+
+.field select {
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+.field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3.5px rgba(79, 70, 229, 0.14);
+}
+
+/* Senha no card (tipo Wi-Fi) */
+.wifi-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.wifi-row code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  color: var(--accent-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wifi-row button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-3);
+  padding: 3px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.wifi-row button:hover { color: var(--accent); }
+
+.badge-wifi { background: #e6f5fd; color: #0369a1; }
+
+/* ============ Página pública: conectar ao Wi-Fi ============ */
+
+.wifi-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 18px;
+  background:
+    radial-gradient(1100px 700px at 85% -10%, rgba(124, 58, 237, 0.55), transparent 55%),
+    radial-gradient(900px 700px at -15% 110%, rgba(56, 189, 248, 0.35), transparent 55%),
+    linear-gradient(160deg, #12122a 0%, #191936 55%, #12122a 100%);
+}
+
+.wifi-card {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 26px;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+  padding: 34px 30px 24px;
+  animation: modalIn 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+.wifi-card-center { text-align: center; }
+
+.wifi-hero { text-align: center; margin-bottom: 20px; }
+
+.wifi-big-icon {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 16px;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(140deg, var(--violet), var(--accent) 55%, #38bdf8);
+  box-shadow: 0 16px 36px rgba(99, 82, 237, 0.5);
+}
+.wifi-big-icon-muted { background: #eceaf6; color: #8a8aa3; box-shadow: none; }
+
+.wifi-title {
+  margin: 0;
+  font-size: 25px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.wifi-sub {
+  margin: 8px auto 0;
+  max-width: 320px;
+  color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.wifi-block { margin-bottom: 14px; }
+.wifi-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+.wifi-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 7px;
+}
+.wifi-block-head .wifi-label { margin-bottom: 0; }
+
+.wifi-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  background: var(--green-soft);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.wifi-chip-open { color: var(--amber); background: var(--amber-soft); }
+
+.wifi-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.wifi-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+.wifi-senha { letter-spacing: 0.08em; }
+
+.wifi-icon-btn {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all 0.14s ease;
+}
+.wifi-icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.wifi-cta {
+  width: 100%;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 13px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--violet));
+  box-shadow: 0 12px 26px rgba(79, 70, 229, 0.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+.wifi-cta:hover { transform: translateY(-1px); box-shadow: 0 16px 32px rgba(79, 70, 229, 0.5); }
+.wifi-cta:active { transform: scale(0.98); }
+
+.wifi-open-note {
+  background: var(--amber-soft);
+  border: 1px solid #f3ddb8;
+  color: var(--amber);
+  border-radius: 13px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.wifi-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 18px 0 4px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.wifi-step { display: flex; gap: 12px; align-items: flex-start; }
+.wifi-step-num {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 12.5px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  margin-top: 1px;
+}
+.wifi-step b { font-size: 13.5px; letter-spacing: -0.01em; }
+.wifi-step p { margin: 2px 0 0; font-size: 12px; color: var(--text-3); line-height: 1.45; }
+
+.wifi-direct { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+.wifi-direct-toggle {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed var(--border-strong);
+  background: transparent;
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.wifi-direct-toggle:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+.wifi-direct-body {
+  margin-top: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  animation: modalIn 0.25s ease;
+}
+.wifi-direct-body img { width: 180px; height: 180px; image-rendering: pixelated; }
+.wifi-direct-body p { margin: 10px auto 0; font-size: 12px; color: var(--text-2); line-height: 1.5; max-width: 300px; }
+.wifi-direct-placeholder { width: 180px; height: 180px; margin: 0 auto; display: grid; place-items: center; color: var(--text-3); font-size: 12px; }
+
+.wifi-foot {
+  margin: 18px 0 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+}
