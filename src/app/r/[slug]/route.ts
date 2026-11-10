@@ -30,7 +30,7 @@ function htmlPage(icon: string, title: string, message: string, status: number) 
   );
 }
 
-export async function GET(_request: Request, { params }: Params) {
+export async function GET(request: Request, { params }: Params) {
   const { slug } = await params;
   const clean = (slug || "").toLowerCase().trim();
 
@@ -41,7 +41,7 @@ export async function GET(_request: Request, { params }: Params) {
   const supabase = supabaseAdmin();
   const { data, error } = await supabase
     .from("plaquinhas")
-    .select("destino, ativo, arquivada, nome")
+    .select("destino, ativo, arquivada, nome, tipo")
     .eq("slug", clean)
     .maybeSingle();
 
@@ -63,17 +63,29 @@ export async function GET(_request: Request, { params }: Params) {
     );
   }
 
-  const destino = normalizeDestination(data.destino);
-  if (!destino) {
-    console.error("Destino inválido no banco para slug", clean);
-    return htmlPage("⚠️", "Destino indisponível", "O endereço de destino desta plaquinha está inválido. Avise o estabelecimento.", 502);
-  }
-
-  // Contabiliza o scan (melhor esforço — não impede o redirect se falhar)
+  // Contabiliza o scan (melhor esforço — não impede o redirecionamento se falhar)
   try {
     await supabase.rpc("registrar_scan", { p_slug: clean });
   } catch (e) {
     console.error("Falha ao registrar scan:", e);
+  }
+
+  // Placa de Wi-Fi: leva para a página pública de conexão (/w/<slug>).
+  // Location relativo — funciona em qualquer domínio/proxy.
+  if (data.tipo === "wifi") {
+    return new Response(null, {
+      status: 307,
+      headers: {
+        Location: `/w/${clean}`,
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  const destino = data.destino ? normalizeDestination(data.destino) : null;
+  if (!destino) {
+    console.error("Destino inválido no banco para slug", clean);
+    return htmlPage("⚠️", "Destino indisponível", "O endereço de destino desta plaquinha está inválido. Avise o estabelecimento.", 502);
   }
 
   return new Response(null, {
